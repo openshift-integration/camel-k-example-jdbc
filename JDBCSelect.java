@@ -35,10 +35,10 @@ public class JDBCSelect extends RouteBuilder {
 
   private void registerDatasource() throws Exception {
    BasicDataSource ds = new BasicDataSource();
-   ds.setUsername("postgresadmin");
+   ds.setUsername("admin");
    ds.setDriverClassName("org.postgresql.Driver");
-   ds.setPassword("admin123");
-   ds.setUrl("jdbc:postgresql://postgres:5432/test");
+   ds.setPassword("password");
+   ds.setUrl("jdbc:postgresql://postgresql:5432/test");
 
    this.getContext().getRegistry().bind("myPostgresDS", ds);
  }

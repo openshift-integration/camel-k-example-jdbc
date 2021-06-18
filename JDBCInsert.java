@@ -27,18 +27,18 @@ public class JDBCInsert extends RouteBuilder {
   public void configure() throws Exception {
    registerDatasource();
 
-   from("timer://foo?period=10000")
-   .setBody(simple("INSERT INTO test VALUES (\"message #${exchangeProperty.CamelTimerCounter}\")"))
+   from("timer://sql-insert?period=10000")
+   .setBody(simple("INSERT INTO test (data) VALUES ('message #${exchangeProperty.CamelTimerCounter}')"))
    .to("jdbc:myPostgresDS")
    .to("log:info");
   }
 
   private void registerDatasource() throws Exception {
    BasicDataSource ds = new BasicDataSource();
-   ds.setUsername("postgresadmin");
+   ds.setUsername("admin");
    ds.setDriverClassName("org.postgresql.Driver");
-   ds.setPassword("admin123");
-   ds.setUrl("jdbc:postgresql://postgres:5432/test");
+   ds.setPassword("password");
+   ds.setUrl("jdbc:postgresql://postgresql:5432/test");
 
    this.getContext().getRegistry().bind("myPostgresDS", ds);
  }

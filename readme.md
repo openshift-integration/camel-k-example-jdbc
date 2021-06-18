@@ -4,27 +4,6 @@ This example demonstrates how to get started with `Camel K` and an SQL database 
 
 The quickstart is based on the [Apache Camel K upstream database examples](https://github.com/apache/camel-k/blob/main/examples/databases/).
 
-## Preparing the database instance
-
-We assume you already have a database up and running. If it's not the case, you can create an instance of `Postgres` on your Openshift cluster by setting the following yaml descriptors:
-
-```
-oc create -f postgres-configmap.yaml
-oc create -f postgres-storage.yaml
-oc create -f postgres-deployment.yaml
-oc create -f postgres-service.yaml
-```
-
-NOTE: please, consider the above as a simple database deployment to run this tutorial. It cannot be considered ready for any production purposes. If you use another database, the procedure may be different according to each database vendors.
-
-### Prepare the database
-
-In order to configure the `JDBC` you will need to get the following settings: the `JDBC url`, `driver`, `username` and `password`. You may require assistance from your database administrator if you're not managing directly the database instance.
-
-If you are using the Postgres instance mentioned above, you will find the credentials in the _postgres-configmap.yaml_ file.
-
-> **NOTE**: make sure your Openshift cluster have connectivity with your database.
-
 ## Preparing the cluster
 
 This example can be run on any OpenShift 4.3+ cluster or a local development instance (such as [CRC](https://github.com/code-ready/crc)). Ensure that you have a cluster available and login to it using the OpenShift `oc` command line tool.
@@ -71,7 +50,19 @@ When Camel K is installed, you should find an entry related to `red-hat-camel-k-
 
 You can now proceed to the next section.
 
-## 2. Running a JDBC Producer (SQL insert)
+## 2. Preparing the database instance
+
+We assume you already have a database up and running. If it's not the case, you can easily create a new instance on [Openshift Online](https://www.openshift.com/products/online/) or [create your own Postgres sample database](https://docs.openshift.com/online/pro/using_images/db_images/postgresql.html). You can also deploy any other database instance through a wizard using the _+Add_ button on your **Openshift Console**.
+
+### Prepare the database
+
+For this tutorial, we're using a `Postgres` database service named `postgresql` deployed in the same `camel-k-jdbc` project. In order to configure the `JDBC` you will need to get the following settings: the `JDBC url`, `driver`, `username` and `password`. You may require assistance from your database administrator if you're not managing directly the database instance.
+
+If you are using the Postgres instance mentioned above, you will setup the credentials as part of the deployment process.
+
+> **NOTE**: make sure your Openshift cluster have connectivity with your database if it's deployed outside the cluster.
+
+## 3. Running a JDBC Producer (SQL insert)
 
 At this stage, run a producer integration. This one will insert a row in a `test` table, every 10 seconds. Before executing the `Integration` you will have to change the `JDBC username`, `password` `driver` and `url` that you can find in _JDBCInsert.java_ at lines 38 to 41. Please, notice that these values have to correspond to the ones expected by your instance, so, you can replace the values provided in our examples with yours.
 
@@ -85,11 +76,12 @@ The producer will create a new message and push into the database and log some i
 
 ```
 ...
-???
+[2] 2021-06-18 13:39:22,590 INFO  [info] (Camel (camel-1) thread #0 - timer://sql-insert) Exchange[ExchangePattern: InOnly, BodyType: String, Body: INSERT INTO test (data) VALUES ('message #3')]
+[2] 2021-06-18 13:39:32,574 INFO  [info] (Camel (camel-1) thread #0 - timer://sql-insert) Exchange[ExchangePattern: InOnly, BodyType: String, Body: INSERT INTO test (data) VALUES ('message #4')]
 ...
 ```
 
-## 3. Running a JDBC Consumer (SQL select)
+## 4. Running a JDBC Consumer (SQL select)
 
 Now we can run a consumer integration. This one will read 5 rows from a `test` table, every 10 seconds. Before executing the `Integration` you will have to change the `JDBC username`, `password` `driver` and `url` that you can find in _JDBCSelect.java_ at lines 38 to 41 in the same way you did in the previous section.
 
@@ -100,8 +92,9 @@ kamel run JDBCSelect.java --dev -d mvn:org.postgresql:postgresql:42.2.21 -d mvn:
 Also here we had to specify certain dependencies that may change if you use a different database. A consumer will start logging the events found in the table:
 
 ```
-???
-
+...
+[1] 2021-06-18 13:40:05,609 INFO  [info] (Camel (camel-1) thread #0 - timer://foo) Exchange[ExchangePattern: InOnly, BodyType: java.util.ArrayList, Body: [{data=message #1}, {data=message #2}, {data=message #3}, {data=message #4}]]
+...
 ```
 
 > **NOTE**: You may have run the consumer and producer as separate routes in the same integration.
