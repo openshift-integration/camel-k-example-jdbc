@@ -44,7 +44,7 @@ You can use the following section to check if your environment is configured pro
 
 The OpenShift CLI tool ("oc") will be used to interact with the OpenShift cluster.
 
-[Check if the OpenShift CLI ("oc") is installed](didact://?commandId=vscode.didact.cliCommandSuccessful&text=oc-requirements-status$$oc%20help&completion=Checked%20oc%20tool%20availability "Tests to see if `oc help` returns a 0 return code"){.didact}
+[Check if the OpenShift CLI ("oc") is installed](didact://?commandId=vscode.didact.requirementCheck&text=oc-requirements-status$$oc%20help&completion=Checked%20oc%20tool%20availability "Tests to see if `oc help` returns a 0 return code"){.didact}
 
 *Status: unknown*{#oc-requirements-status}
 
@@ -112,21 +112,21 @@ If you are using the Postgres instance mentioned above, you will setup the crede
 
 ### Setting cluster secret
 
-You should set a Kubernetes `Secret` in order to avoid exposing sensitive information. You can bundle the configuration expected by the application in a secret. For convenience we have put them into a file named `datasource.properties`, however, they can be provided in the cluster differently.
+You should set a Kubernetes `Secret` in order to avoid exposing sensitive information. You can bundle the configuration expected by the application in a secret. For convenience we have put them into a file named `datasource.properties`, however, they can be provided in the cluster differently. Please, notice that these values have to correspond to the ones expected by your instance, so, you can replace the values provided in our examples with yours.
 
 ```
 oc create secret generic my-datasource --from-file=datasource.properties
 ```
-([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$oc%20create%20secret%20generic%20my-datasource%20--from-file=datasource.properties&completion=Secret%20created. "Opens a new terminal and sends the command above"){.didact})
+([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$oc%20create%20secret%20generic%20my-datasource%20--from-file=datasourceAutowired%2Fdatasource.properties&completion=Secret%20created. "Opens a new terminal and sends the command above"){.didact})
 
 ## 3. Running a JDBC Producer (SQL insert)
 
-At this stage, run a producer integration. This one will insert a row in a `test` table, every 10 seconds. Before executing the `Integration` you will have to change the `JDBC username`, `password` `driver` and `url` that you can find in _JDBCInsert.java_ at lines 38 to 41. Please, notice that these values have to correspond to the ones expected by your instance, so, you can replace the values provided in our examples with yours.
+At this stage, run a producer integration. This one will insert a row in a `test` table, every 10 seconds. 
 
 ```
 kamel run JDBCInsert.java --dev --build-property quarkus.datasource.camel.db-kind=postgresql --config secret:my-datasource -d mvn:io.quarkus:quarkus-jdbc-postgresql:1.13.7.Final
 ```
-([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$kamel%20run%20JDBCInsert.java%20--dev%20--build-property%20quarkus.datasource.camel.db-kind=postgresql%20--config%20secret:my-datasource%20-d%20mvn:io.quarkus:quarkus-jdbc-postgresql:1.13.7.Final&completion=Camel%20K%20integration%20run%20in%20dev%20mode. "Opens a new terminal and sends the command above"){.didact})
+([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$kamel%20run%20datasourceAutowired%2FJDBCInsert.java%20--dev%20--build-property%20quarkus.datasource.camel.db-kind=postgresql%20--config%20secret:my-datasource%20-d%20mvn:io.quarkus:quarkus-jdbc-postgresql:1.13.7.Final&completion=Camel%20K%20integration%20run%20in%20dev%20mode%2C%20you%20can%20stop%20it%20pressing%20CTRL%2BC%20on%20terminal. "Opens a new terminal and sends the command above"){.didact})
 
 Please, notice that we must specify certain dependencies that will be needed at runtime. In particular, we will have to provide the `JDBC driver` that is expected by the database. In our example, we're using the `Postgresql` drivers: make sure you pick up the proper driver according to your database instance.
 
@@ -146,7 +146,7 @@ Now we can run a consumer integration. This one will read 5 rows from a `test` t
 ```
 kamel run JDBCSelect.java --dev --build-property quarkus.datasource.camel.db-kind=postgresql --config secret:my-datasource -d mvn:io.quarkus:quarkus-jdbc-postgresql:1.13.7.Final
 ```
-([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$kamel%20run%20JDBCSelect.java%20--dev%20--build-property%20quarkus.datasource.camel.db-kind=postgresql%20--config%20secret:my-datasource%20-d%20mvn:io.quarkus:quarkus-jdbc-postgresql:1.13.7.Final&completion=Camel%20K%20integration%20run%20in%20dev%20mode. "Opens a new terminal and sends the command above"){.didact})
+([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$kamel%20run%20datasourceAutowired%2FJDBCSelect.java%20--dev%20--build-property%20quarkus.datasource.camel.db-kind=postgresql%20--config%20secret:my-datasource%20-d%20mvn:io.quarkus:quarkus-jdbc-postgresql:1.13.7.Final&completion=Camel%20K%20integration%20run%20in%20dev%20mode%2C%20you%20can%20stop%20it%20pressing%20CTRL%2BC%20on%20terminal. "Opens a new terminal and sends the command above"){.didact})
 
 Also here we had to specify certain dependencies that may change if you use a different database. A consumer will start logging the events found in the table:
 

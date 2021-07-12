@@ -44,7 +44,7 @@ You can use the following section to check if your environment is configured pro
 
 The OpenShift CLI tool ("oc") will be used to interact with the OpenShift cluster.
 
-[Check if the OpenShift CLI ("oc") is installed](didact://?commandId=vscode.didact.cliCommandSuccessful&text=oc-requirements-status$$oc%20help&completion=Checked%20oc%20tool%20availability "Tests to see if `oc help` returns a 0 return code"){.didact}
+[Check if the OpenShift CLI ("oc") is installed](didact://?commandId=vscode.didact.requirementCheck&text=oc-requirements-status$$oc%20help&completion=Checked%20oc%20tool%20availability "Tests to see if `oc help` returns a 0 return code"){.didact}
 
 *Status: unknown*{#oc-requirements-status}
 
@@ -117,7 +117,7 @@ At this stage, run a producer integration. This one will insert a row in a `test
 ```
 kamel run JDBCInsert.java --dev -d mvn:org.postgresql:postgresql:42.2.21 -d mvn:org.apache.commons:commons-dbcp2:2.8.0
 ```
-([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$kamel%20run%20JDBCInsert.java%20--dev%20-d%20mvn:org.postgresql:postgresql:42.2.21%20-d%20mvn:org.apache.commons:commons-dbcp2:2.8.0&completion=Camel%20K%20integration%20run%20in%20dev%20mode. "Opens a new terminal and sends the command above"){.didact})
+([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$kamel%20run%20basic%2FJDBCInsert.java%20--dev%20-d%20mvn:org.postgresql:postgresql:42.2.21%20-d%20mvn:org.apache.commons:commons-dbcp2:2.8.0&completion=Camel%20K%20integration%20run%20in%20dev%20mode%2C%20you%20can%20stop%20it%20pressing%20CTRL%2BC%20on%20terminal. "Opens a new terminal and sends the command above"){.didact})
 
 Please, notice that we must specify certain dependencies that will be needed at runtime. In particular, we will have to provide the `JDBC driver` that is expected by the database. In our example, we're using the `Postgresql` drivers: make sure you pick up the proper driver according to your database instance.
 
@@ -137,7 +137,7 @@ Now we can run a consumer integration. This one will read 5 rows from a `test` t
 ```
 kamel run JDBCSelect.java --dev -d mvn:org.postgresql:postgresql:42.2.21 -d mvn:org.apache.commons:commons-dbcp2:2.8.0
 ```
-([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$kamel%20run%20JDBCSelect.java%20--dev%20-d%20mvn:org.postgresql:postgresql:42.2.21%20-d%20mvn:org.apache.commons:commons-dbcp2:2.8.0&completion=Camel%20K%20integration%20run%20in%20dev%20mode. "Opens a new terminal and sends the command above"){.didact})
+([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelTerm$$kamel%20run%20basic%2FJDBCSelect.java%20--dev%20-d%20mvn:org.postgresql:postgresql:42.2.21%20-d%20mvn:org.apache.commons:commons-dbcp2:2.8.0&completion=Camel%20K%20integration%20run%20in%20dev%20mode%2C%20you%20can%20stop%20it%20pressing%20CTRL%2BC%20on%20terminal. "Opens a new terminal and sends the command above"){.didact})
 
 Also here we had to specify certain dependencies that may change if you use a different database. A consumer will start logging the events found in the table:
 
