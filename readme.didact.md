@@ -52,7 +52,7 @@ The OpenShift CLI tool ("oc") will be used to interact with the OpenShift cluste
 
 In order to execute this demo, you will need to have an OpenShift cluster with the correct access level, the ability to create projects and install operators as well as the Apache Camel K CLI installed on your local system.
 
-[Check if you're connected to an OpenShift cluster](didact://?commandId=vscode.didact.requirementCheck&text=cluster-requirements-status$$oc%20get%20project%20camel-k-jdbc&completion=OpenShift%20is%20connected. "Tests to see if `oc get project` returns a result"){.didact}
+[Check if you're connected to an OpenShift cluster](didact://?commandId=vscode.didact.requirementCheck&text=cluster-requirements-status$$oc%20get%20project$$NAME&completion=OpenShift%20is%20connected. "Tests to see if connected to an openshift cluster"){.didact}
 
 *Status: unknown*{#cluster-requirements-status}
 
@@ -124,9 +124,9 @@ oc create secret generic my-datasource --from-file=datasource.properties
 At this stage, run a producer integration. This one will insert a row in a `test` table, every 10 seconds. 
 
 ```
-kamel run JDBCInsert.java --dev --build-property quarkus.datasource.camel.db-kind=postgresql --config secret:my-datasource -d mvn:io.quarkus:quarkus-jdbc-postgresql:1.13.7.Final
+kamel run JDBCInsert.java --dev --build-property quarkus.datasource.camel.db-kind=postgresql --config secret:my-datasource -d mvn:io.quarkus:quarkus-jdbc-postgresql
 ```
-([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelProducerTerm$$kamel%20run%20JDBCInsert.java%20--dev%20--build-property%20quarkus.datasource.camel.db-kind=postgresql%20--config%20secret:my-datasource%20-d%20mvn:io.quarkus:quarkus-jdbc-postgresql:1.13.7.Final&completion=Camel%20K%20integration%20run%20in%20dev%20mode. "Opens a new terminal and sends the command above"){.didact})
+([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelProducerTerm$$kamel%20run%20JDBCInsert.java%20--dev%20--build-property%20quarkus.datasource.camel.db-kind=postgresql%20--config%20secret:my-datasource%20-d%20mvn:io.quarkus:quarkus-jdbc-postgresql&completion=Camel%20K%20integration%20run%20in%20dev%20mode. "Opens a new terminal and sends the command above"){.didact})
 
 Please, notice that we must specify certain dependencies that will be needed at runtime. In particular, we will have to provide the `JDBC driver` that is expected by the database. In our example, we're using the `Postgresql` drivers: make sure you pick up the proper driver according to your database instance.
 
@@ -144,9 +144,9 @@ The producer will create a new message and push into the database and log some i
 Now we can run a consumer integration. This one will read 5 rows from a `test` table, every 10 seconds.
 
 ```
-kamel run JDBCSelect.java --dev --build-property quarkus.datasource.camel.db-kind=postgresql --config secret:my-datasource -d mvn:io.quarkus:quarkus-jdbc-postgresql:1.13.7.Final
+kamel run JDBCSelect.java --dev --build-property quarkus.datasource.camel.db-kind=postgresql --config secret:my-datasource -d mvn:io.quarkus:quarkus-jdbc-postgresql
 ```
-([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelConsumerTerm$$kamel%20run%20JDBCSelect.java%20--dev%20--build-property%20quarkus.datasource.camel.db-kind=postgresql%20--config%20secret:my-datasource%20-d%20mvn:io.quarkus:quarkus-jdbc-postgresql:1.13.7.Final&completion=Camel%20K%20integration%20run%20in%20dev%20mode. "Opens a new terminal and sends the command above"){.didact})
+([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelConsumerTerm$$kamel%20run%20JDBCSelect.java%20--dev%20--build-property%20quarkus.datasource.camel.db-kind=postgresql%20--config%20secret:my-datasource%20-d%20mvn:io.quarkus:quarkus-jdbc-postgresql&completion=Camel%20K%20integration%20run%20in%20dev%20mode. "Opens a new terminal and sends the command above"){.didact})
 
 Also here we had to specify certain dependencies that may change if you use a different database. A consumer will start logging the events found in the table:
 
