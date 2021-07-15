@@ -32,7 +32,7 @@ public class JDBCSelect extends RouteBuilder {
   public void configure() throws Exception {
    from("timer://foo?period=10000")
    .setBody(constant("SELECT * FROM test LIMIT 5 OFFSET 0"))
-   .to("jdbc:myPostgresDS")
+   .to("jdbc:camel")
    .to("log:info");
   }
 
