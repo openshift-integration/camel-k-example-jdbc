@@ -22,7 +22,7 @@ package datasourceAutowired;
 // 
 // kamel run JDBCSelect.java --dev --build-property quarkus.datasource.camel.db-kind=postgresql 
 //                                 --config secret:my-datasource
-//                                 -d mvn:io.quarkus:quarkus-jdbc-postgresql:1.13.7.Final
+//                                 -d mvn:io.quarkus:quarkus-jdbc-postgresql
 // 
 
 import org.apache.camel.builder.RouteBuilder;
@@ -32,7 +32,7 @@ public class JDBCSelect extends RouteBuilder {
   public void configure() throws Exception {
    from("timer://foo?period=10000")
    .setBody(constant("SELECT * FROM test LIMIT 5 OFFSET 0"))
-   .to("jdbc:myPostgresDS")
+   .to("jdbc:camel")
    .to("log:info");
   }
 

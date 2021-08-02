@@ -22,7 +22,7 @@ package datasourceAutowired;
 // 
 // kamel run JDBCInsert.java --dev --build-property quarkus.datasource.camel.db-kind=postgresql 
 //                                 --config secret:my-datasource
-//                                 -d mvn:io.quarkus:quarkus-jdbc-postgresql:1.13.7.Final
+//                                 -d mvn:io.quarkus:quarkus-jdbc-postgresql
 
 import org.apache.camel.builder.RouteBuilder;
 
