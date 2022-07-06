@@ -16,24 +16,29 @@ package datasourceAutowired;
  * limitations under the License.
  */
 
-// You can use the sample postgres database available at /postgres-deploy/README.md
+// You can use the sample postgres database available at https://github.com/apache/camel-k/tree/release-1.8.x/examples/databases/postgres-deploy
+//
+// kamel run JDBCSelect.java --dev -p quarkus.datasource.camel.db-kind=postgresql
+//                                 -p quarkus.datasource.camel.jdbc.url=jdbc:postgresql://postgres:5432/test
+//                                 -p quarkus.datasource.camel.username=postgresadmin
+//                                 -p quarkus.datasource.camel.password=admin123
+
+// Alternatively, you can bundle your credentials as a secret properties file:
 //
 // kubectl create secret generic my-datasource --from-file=datasource.properties
-// 
-// kamel run JDBCSelect.java --dev --build-property quarkus.datasource.camel.db-kind=postgresql 
-//                                 --config secret:my-datasource
-//                                 -d mvn:io.quarkus:quarkus-jdbc-postgresql
-// 
+//
+// kamel run JDBCSelect.java --dev --config secret:my-datasource
+
+// camel-k: dependency=mvn:io.quarkus:quarkus-jdbc-postgresql
 
 import org.apache.camel.builder.RouteBuilder;
 
 public class JDBCSelect extends RouteBuilder {
-  @Override
-  public void configure() throws Exception {
-   from("timer://foo?period=10000")
-   .setBody(constant("SELECT * FROM test LIMIT 5 OFFSET 0"))
-   .to("jdbc:camel")
-   .to("log:info");
-  }
-
+    @Override
+    public void configure() throws Exception {
+        from("timer://foo?period=10000")
+                .setBody(constant("SELECT data FROM test LIMIT 5 OFFSET 0"))
+                .to("jdbc:default")
+                .to("log:info");
+    }
 }

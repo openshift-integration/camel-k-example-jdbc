@@ -2,7 +2,7 @@
 
 This example demonstrates how to get started with `Camel K` and an SQL database via `JDBC` drivers. We will show how to quickly set up an integration producing data into a Postgres database (you can use any relational database of your choice). We will show also how to read data from the same database.
 
-The quickstart is based on the [Apache Camel K upstream database examples](https://github.com/apache/camel-k/blob/main/examples/databases/).
+The quickstart is based on the [Apache Camel K upstream database examples](https://github.com/apache/camel-k/tree/release-1.8.x/examples/databases/).
 
 ## Before you begin
 
@@ -104,9 +104,11 @@ We assume you already have a database up and running. If it's not the case, you 
 
 ### Prepare the database
 
-For this tutorial, we're using a `Postgres` database service named `postgresql` deployed in the same `camel-k-jdbc` project. In order to configure the `JDBC` you will need to get the following settings: the `JDBC url`, `driver`, `username` and `password`. You may require assistance from your database administrator if you're not managing directly the database instance.
+For this tutorial, we're using a `Postgres` database service named `postgresql` deployed in the same `camel-k-jdbc` project. In order to configure the `JDBC` you will need to get the following settings: the `JDBC url`, `driver`, `username` and `password`. You may require assistance from your database administrator if you are not managing directly the database instance.
 
-If you are using the Postgres instance mentioned above, you will setup the credentials as part of the deployment process.
+To set up the database tables and some test data you can use the sample postgres database available at the [Apache Camel K upstream database examples](https://github.com/apache/camel-k/tree/release-1.8.x/examples/databases/postgres-deploy)                          
+
+If you are using the Postgres instance mentioned above, you will set up the credentials as part of the deployment process.
 
 > **NOTE**: make sure your Openshift cluster have connectivity with your database if it's deployed outside the cluster.
 
@@ -124,9 +126,9 @@ oc create secret generic my-datasource --from-file=datasource.properties
 At this stage, run a producer integration. This one will insert a row in a `test` table, every 10 seconds. 
 
 ```
-kamel run JDBCInsert.java --dev --build-property quarkus.datasource.camel.db-kind=postgresql --config secret:my-datasource -d mvn:io.quarkus:quarkus-jdbc-postgresql
+kamel run JDBCInsert.java --dev --config secret:my-datasource
 ```
-([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelProducerTerm$$kamel%20run%20JDBCInsert.java%20--dev%20--build-property%20quarkus.datasource.camel.db-kind=postgresql%20--config%20secret:my-datasource%20-d%20mvn:io.quarkus:quarkus-jdbc-postgresql&completion=Camel%20K%20integration%20run%20in%20dev%20mode. "Opens a new terminal and sends the command above"){.didact})
+([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelProducerTerm$$kamel%20run%20JDBCInsert.java%20--dev%20--config%20secret:my-datasource&completion=Camel%20K%20integration%20run%20in%20dev%20mode. "Opens a new terminal and sends the command above"){.didact})
 
 Please, notice that we must specify certain dependencies that will be needed at runtime. In particular, we will have to provide the `JDBC driver` that is expected by the database. In our example, we're using the `Postgresql` drivers: make sure you pick up the proper driver according to your database instance.
 
@@ -144,9 +146,9 @@ The producer will create a new message and push into the database and log some i
 Now we can run a consumer integration. This one will read 5 rows from a `test` table, every 10 seconds.
 
 ```
-kamel run JDBCSelect.java --dev --build-property quarkus.datasource.camel.db-kind=postgresql --config secret:my-datasource -d mvn:io.quarkus:quarkus-jdbc-postgresql
+kamel run JDBCSelect.java --dev --config secret:my-datasource
 ```
-([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelConsumerTerm$$kamel%20run%20JDBCSelect.java%20--dev%20--build-property%20quarkus.datasource.camel.db-kind=postgresql%20--config%20secret:my-datasource%20-d%20mvn:io.quarkus:quarkus-jdbc-postgresql&completion=Camel%20K%20integration%20run%20in%20dev%20mode. "Opens a new terminal and sends the command above"){.didact})
+([^ execute](didact://?commandId=vscode.didact.sendNamedTerminalAString&text=camelConsumerTerm$$kamel%20run%20JDBCSelect.java%20--dev%20--config%20secret:my-datasource&completion=Camel%20K%20integration%20run%20in%20dev%20mode. "Opens a new terminal and sends the command above"){.didact})
 
 Also here we had to specify certain dependencies that may change if you use a different database. A consumer will start logging the events found in the table:
 

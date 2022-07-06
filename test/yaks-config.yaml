@@ -1,0 +1,33 @@
+config:
+  namespace:
+    temporary: false
+  runtime:
+    env:
+      - name: YAKS_CAMELK_AUTO_REMOVE_RESOURCES
+        value: false
+      - name: YAKS_KUBERNETES_AUTO_REMOVE_RESOURCES
+        value: false
+      - name: YAKS_TESTCONTAINERS_AUTO_REMOVE_RESOURCES
+        value: false
+      - name: YAKS_CAMELK_SUPPORT_VARIABLES_IN_SOURCES
+        value: false
+    resources:
+      - ../JDBCInsert.java
+      - ../JDBCSelect.java
+      - datasource-test.properties
+    testcontainers:
+      enabled: true
+  dump:
+    enabled: true
+    failedOnly: true
+    includes:
+      - app=camel-k
+pre:
+  - name: Create secret holding database credentials
+    run: kubectl create secret generic test-datasource --from-file=datasource-test.properties
+post:
+  - name: Delete secret
+    run: kubectl delete secret test-datasource
+  - name: print dump
+    if: env:CI=true && failure()
+    run: kamel dump
