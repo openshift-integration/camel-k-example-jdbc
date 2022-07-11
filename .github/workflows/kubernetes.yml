@@ -33,7 +33,7 @@ jobs:
   test:
     runs-on: ubuntu-latest
     env:
-      CAMEL_K_VERSION: 1.8.2
+      CAMEL_K_VERSION: 1.8.0
       YAKS_VERSION: 0.11.0-202207071318
       YAKS_IMAGE_NAME: "docker.io/yaks/yaks"
       YAKS_RUN_OPTIONS: "--timeout=15m"
