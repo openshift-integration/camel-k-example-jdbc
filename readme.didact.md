@@ -2,7 +2,7 @@
 
 This example demonstrates how to get started with `Camel K` and an SQL database via `JDBC` drivers. We will show how to quickly set up an integration producing data into a Postgres database (you can use any relational database of your choice). We will show also how to read data from the same database.
 
-The quickstart is based on the [Apache Camel K upstream database examples](https://github.com/apache/camel-k/tree/release-1.8.x/examples/databases/).
+The quickstart is based on the [Apache Camel K upstream database examples](https://github.com/apache/camel-k/tree/main/examples/databases/).
 
 ## Before you begin
 
@@ -106,7 +106,7 @@ We assume you already have a database up and running. If it's not the case, you 
 
 For this tutorial, we're using a `Postgres` database service named `postgresql` deployed in the same `camel-k-jdbc` project. In order to configure the `JDBC` you will need to get the following settings: the `JDBC url`, `driver`, `username` and `password`. You may require assistance from your database administrator if you are not managing directly the database instance.
 
-To set up the database tables and some test data you can use the sample postgres database available at the [Apache Camel K upstream database examples](https://github.com/apache/camel-k/tree/release-1.8.x/examples/databases/postgres-deploy)                          
+To set up the database tables and some test data you can use the sample postgres database available at the [Apache Camel K upstream database examples](https://github.com/apache/camel-k/tree/main/examples/databases/postgres-deploy)                          
 
 If you are using the Postgres instance mentioned above, you will set up the credentials as part of the deployment process.
 

@@ -16,7 +16,7 @@ package datasourceAutowired;
  * limitations under the License.
  */
 
-// You can use the sample postgres database available at https://github.com/apache/camel-k/tree/release-1.8.x/examples/databases/postgres-deploy
+// You can use the sample postgres database available at https://github.com/apache/camel-k/tree/main/examples/databases/postgres-deploy
 //
 // kamel run JDBCSelect.java --dev -p quarkus.datasource.camel.db-kind=postgresql
 //                                 -p quarkus.datasource.camel.jdbc.url=jdbc:postgresql://postgres:5432/test
