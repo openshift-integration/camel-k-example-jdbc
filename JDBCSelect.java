@@ -29,6 +29,7 @@ package datasourceAutowired;
 //
 // kamel run JDBCSelect.java --dev --config secret:my-datasource
 
+// camel-k: dependency=camel:jdbc
 // camel-k: dependency=mvn:io.quarkus:quarkus-jdbc-postgresql
 
 import org.apache.camel.builder.RouteBuilder;
