@@ -39,7 +39,7 @@ public class JDBCInsert extends RouteBuilder {
     public void configure() throws Exception {
         from("timer://sql-insert?period=10000")
                 .setBody(simple("INSERT INTO test (data) VALUES ('message #${exchangeProperty.CamelTimerCounter}')"))
-                .to("jdbc:default")
+                .to("jdbc:default?useHeadersAsParameters=true")
                 .to("log:info");
     }
 }
