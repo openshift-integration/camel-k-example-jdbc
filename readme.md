@@ -81,6 +81,45 @@ If you are using the Postgres instance mentioned above, you will set up the cred
 
 > **NOTE**: make sure your Openshift cluster have connectivity with your database if it's deployed outside the cluster.
 
+## Setting up complementary database
+
+This example uses a PostgreSQL database. We want to install it on the project `camel-transformations`. We can go to the OpenShift 4.x WebConsole page, use the OperatorHub menu item on the left hand side menu and use it to find and install "Crunchy Postgres for Kubernetes". This will install the operator and may take a couple of minutes to install.
+
+Once the operator is installed, we can create a new database using
+
+```
+oc create -f test/resources/postgres.yaml
+```
+
+We connect to the database pod to create a table and add data to be extracted later.
+
+```
+oc rsh $(oc get pods -l postgres-operator.crunchydata.com/role=master -o name)
+```
+
+```
+psql -U postgres test \
+-c "CREATE TABLE test (data TEXT PRIMARY KEY);
+INSERT INTO test(data) VALUES ('hello'), ('world');
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO postgresadmin;"
+```
+```
+exit
+```
+
+Now, we need to find out Postgres username, password and hostname and update the values in the `datasource.properties``.
+
+```
+USER_NAME=$(oc get secret postgres-pguser-postgresadmin --template={{.data.user}} | base64 -d)
+USER_PASSWORD=$(oc get secret postgres-pguser-postgresadmin --template={{.data.password}} | base64 -d)
+HOST=$(oc get secret postgres-pguser-postgresadmin --template={{.data.host}} | base64 -d)
+PASSWORD_SKIP_SPEC_CHAR=$(sed -e 's/[&\\/]/\\&/g; s/$/\\/' -e '$s/\\$//' <<<"$USER_PASSWORD")
+
+sed -i '' "s/^quarkus.datasource.username=.*/quarkus.datasource.username=$USER_NAME/" datasource.properties
+sed -i '' "s/^quarkus.datasource.password=.*/quarkus.datasource.password=$PASSWORD_SKIP_SPEC_CHAR/" datasource.properties
+sed -i '' "s/^quarkus.datasource.jdbc.url=.*/quarkus.datasource.jdbc.url=jdbc:postgresql:\/\/$HOST:5432\/test/" datasource.properties
+```
+
 ### Setting cluster secret
 
 You should set a Kubernetes `Secret` in order to avoid exposing sensitive information. You can bundle the configuration expected by the application in a secret. For convenience we have put them into a file named `datasource.properties`, however, they can be provided in the cluster differently. Please, notice that these values have to correspond to the ones expected by your instance, so, you can replace the values provided in our examples with yours.
