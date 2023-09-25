@@ -115,6 +115,13 @@ USER_PASSWORD=$(oc get secret postgres-pguser-postgresadmin --template={{.data.p
 HOST=$(oc get secret postgres-pguser-postgresadmin --template={{.data.host}} | base64 -d)
 PASSWORD_SKIP_SPEC_CHAR=$(sed -e 's/[&\\/]/\\&/g; s/$/\\/' -e '$s/\\$//' <<<"$USER_PASSWORD")
 
+sed -i "s/^quarkus.datasource.username=.*/quarkus.datasource.username=$USER_NAME/" datasource.properties
+sed -i "s/^quarkus.datasource.password=.*/quarkus.datasource.password=$PASSWORD_SKIP_SPEC_CHAR/" datasource.properties
+sed -i "s/^quarkus.datasource.jdbc.url=.*/quarkus.datasource.jdbc.url=jdbc:postgresql:\/\/$HOST:5432\/test/" datasource.properties
+```
+
+For macOS use these commands:
+```
 sed -i '' "s/^quarkus.datasource.username=.*/quarkus.datasource.username=$USER_NAME/" datasource.properties
 sed -i '' "s/^quarkus.datasource.password=.*/quarkus.datasource.password=$PASSWORD_SKIP_SPEC_CHAR/" datasource.properties
 sed -i '' "s/^quarkus.datasource.jdbc.url=.*/quarkus.datasource.jdbc.url=jdbc:postgresql:\/\/$HOST:5432\/test/" datasource.properties
