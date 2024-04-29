@@ -37,7 +37,7 @@ import org.apache.camel.builder.RouteBuilder;
 public class JDBCInsert extends RouteBuilder {
     @Override
     public void configure() throws Exception {
-        from("timer://sql-insert?period=10000")
+        from("timer://sql-insert?period=10000&includeMetadata=true")
                 .setBody(simple("INSERT INTO test (data) VALUES ('message #${exchangeProperty.CamelTimerCounter}')"))
                 .to("jdbc:default")
                 .to("log:info");
